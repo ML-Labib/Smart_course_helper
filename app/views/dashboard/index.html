@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="text-2xl font-bold text-brand mb-4">My Dashboard</h2>
+<div class="grid md:grid-cols-3 gap-4">
+  <div class="md:col-span-2 space-y-4">
+    <section class="border rounded p-4">
+      <h3 class="font-semibold mb-2">My Courses</h3>
+      <ul class="space-y-1">
+        {% for c in my_courses %}
+          <li><a class="text-brand hover:underline" href="/courses/{{ c.id }}">{{ c.title }}</a></li>
+        {% else %}
+          <li>No enrollments yet — <a class="text-brand underline" href="/courses">browse courses</a>.</li>
+        {% endfor %}
+      </ul>
+    </section>
+    <section class="border rounded p-4">
+      <h3 class="font-semibold mb-2">Assignments & Quizzes Tracker</h3>
+      <div class="grid sm:grid-cols-2 gap-3">
+        <div>
+          <h4 class="text-slate-700 font-medium">Assignments</h4>
+          <ul class="list-disc pl-5">
+            {% for a in upcoming_assignments %}
+              <li>{{ a.course }} — {{ a.title }} (due {{ a.due_at }})
+                {% if a.submitted %}<span class="text-green-600">✓ submitted</span>
+                {% else %}<span class="text-red-600">• pending</span>{% endif %}
+              </li>
+            {% else %}<li>Nothing due</li>{% endfor %}
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-slate-700 font-medium">Quizzes</h4>
+          <ul class="list-disc pl-5">
+            {% for q in upcoming_quizzes %}
+              <li>{{ q.course }} — {{ q.title }} (due {{ q.due_at }}) — attempts left: {{ q.attempts_left }}</li>
+            {% else %}<li>Nothing due</li>{% endfor %}
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+  <aside class="space-y-4">
+    <section class="border rounded p-4">
+      <h3 class="font-semibold mb-2">Notifications</h3>
+      <ul class="space-y-2">
+        {% for n in notifications %}
+          <li>
+            <div class="font-medium">{{ n.title }}</div>
+            <div class="text-sm text-slate-600">{{ n.body }}</div>
+          </li>
+        {% else %}<li>No notifications</li>{% endfor %}
+      </ul>
+    </section>
+    <section class="border rounded p-4">
+      <h3 class="font-semibold mb-2">Tools</h3>
+      <a href="/tools/gpa" class="text-brand underline">GPA Calculator</a><br>
+      <a href="/tools/ai" class="text-brand underline">Study Helper</a>
+    </section>
+  </aside>
+</div>
+{% endblock %}

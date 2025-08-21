@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="text-2xl font-bold text-brand mb-4">Calendar</h2>
+
+<ul class="space-y-2">
+  {% for e in events|sort(attribute='due_at') %}
+    <li class="border rounded p-3 flex justify-between items-center">
+      <div>
+        <div class="font-medium">
+          {% if e.kind == 'study' %}
+            <span class="inline-block px-2 py-0.5 text-xs rounded bg-blue-100 text-blue-700 mr-2">Study</span>
+          {% elif e.type == 'assignment' %}
+            <span class="inline-block px-2 py-0.5 text-xs rounded bg-red-100 text-red-700 mr-2">Assignment</span>
+          {% elif e.type == 'quiz' %}
+            <span class="inline-block px-2 py-0.5 text-xs rounded bg-amber-100 text-amber-700 mr-2">Quiz</span>
+          {% else %}
+            <span class="inline-block px-2 py-0.5 text-xs rounded bg-slate-100 text-slate-700 mr-2">Event</span>
+          {% endif %}
+          {{ e.title }}
+        </div>
+        {% if e.course %}
+          <div class="text-sm text-slate-600">Course: {{ e.course }}{% if e.week %} | Week {{ e.week }}{% endif %}</div>
+        {% endif %}
+      </div>
+      <div class="text-sm">{{ e.due_at }}</div>
+    </li>
+  {% else %}
+    <li class="border rounded p-3">No events yet.</li>
+  {% endfor %}
+</ul>
+
+<a class="text-brand underline mt-3 inline-block" href="/calendar/me.ics">Export .ics</a>
+{% endblock %}

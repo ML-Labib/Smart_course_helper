@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="text-2xl font-bold text-brand mb-4">Quiz Builder — {{ quiz.title }}</h2>
+<form method="post" action="/quizzes/builder/{{ lesson.id }}" class="space-y-4">
+  {% for i in range(10) %}
+    {% set q = questions[i] if questions|length > i else None %}
+    <div class="border rounded p-4">
+      <h3 class="font-semibold mb-2">Question {{ i + 1 }}</h3>
+      <input name="q_text" class="border rounded w-full px-3 py-2 mb-2" placeholder="Question text" value="{{ q and q.question or '' }}" required>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <input name="a1" class="border rounded px-3 py-2" placeholder="Option A" value="{{ q and q.options[0] or '' }}" required>
+        <input name="a2" class="border rounded px-3 py-2" placeholder="Option B" value="{{ q and q.options[1] or '' }}" required>
+        <input name="a3" class="border rounded px-3 py-2" placeholder="Option C" value="{{ q and q.options[2] or '' }}" required>
+        <input name="a4" class="border rounded px-3 py-2" placeholder="Option D" value="{{ q and q.options[3] or '' }}" required>
+      </div>
+      <label class="block mt-2">Correct option (0=A,1=B,2=C,3=D)
+        <input type="number" name="correct" min="0" max="3" class="border rounded px-3 py-2" value="{{ q and q.correct_index or 0 }}" required>
+      </label>
+    </div>
+  {% endfor %}
+  <button class="bg-brand text-white px-4 py-2 rounded hover:bg-brand-dark">Save Quiz (10 questions enforced)</button>
+</form>
+{% endblock %}

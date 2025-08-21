@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+  <h2 class="text-3xl font-bold text-slate-900">Viewing {{ courses|length }} courses</h2>
+  <form class="flex items-center gap-2" method="get">
+    <input name="q" value="{{ q or '' }}" placeholder="Search for a course"
+           class="border rounded px-3 py-2 w-72" />
+    <button class="bg-brand text-white px-4 py-2 rounded hover:bg-brand-dark">
+      🔍
+    </button>
+  </form>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {% for c in courses %}
+    {% set img = c.cover_url %}
+    <div class="bg-slate-900 text-slate-100 border border-blue-600 rounded-lg overflow-hidden shadow">
+      <!-- image -->
+      <div class="h-44 bg-slate-800">
+        <img src="{{ img }}" alt="{{ c.title }}"
+             class="w-full h-full object-cover"
+             onerror="this.onerror=null;this.src='/static/images/course-default.jpg';">
+      </div>
+      <!-- title -->
+      <div class="p-4">
+        <a href="/courses/{{ c.id }}" class="block text-blue-400 font-semibold uppercase tracking-wide hover:underline">
+          {{ c.title }}
+        </a>
+        <div class="text-xs text-slate-300 mt-3">
+          {% if c.start_date %}
+            Starts: {{ c.start_date.strftime('%b %d, %Y') }}
+          {% else %}
+            Starts: —
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <p>No courses found.</p>
+  {% endfor %}
+</div>
+{% endblock %}

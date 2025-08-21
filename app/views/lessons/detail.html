@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block content %}
+<h2 class="text-xl font-bold text-brand mb-2">{{ lesson.title }}</h2>
+<p class="text-slate-600 mb-4">{{ lesson.description }}</p>
+{% if embed_url %}
+  <div class="aspect-video">
+    <iframe class="w-full h-96 rounded" src="{{ embed_url }}" title="YouTube video" frameborder="0" allowfullscreen></iframe>
+  </div>
+{% elif is_pdf %}
+  <a class="bg-brand text-white px-4 py-2 rounded hover:bg-brand-dark" href="{{ lesson.content_url }}" download>Download PDF</a>
+{% elif lesson.content_url %}
+  <a class="text-brand underline" href="{{ lesson.content_url }}" target="_blank">Open content</a>
+{% else %}
+  <div class="p-3 border rounded bg-slate-50">No content URL provided.</div>
+{% endif %}
+{% endblock %}

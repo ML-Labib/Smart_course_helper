@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="grid lg:grid-cols-3 gap-6">
+  <div class="lg:col-span-2">
+    <div class="rounded-lg overflow-hidden border">
+      <img src="{{ course.cover_url }}" alt="{{ course.title }}" class="w-full h-56 object-cover"
+           onerror="this.onerror=null;this.src='/static/images/course-default.jpg';">
+    </div>
+    <h2 class="text-3xl font-bold text-brand mt-4">{{ course.title }}</h2>
+    <div class="text-slate-600 mt-1">
+      <span class="font-semibold">Code:</span> {{ course.course_code }}
+      {% if course.start_date %} • <span class="font-semibold">Start:</span> {{ course.start_date.strftime('%b %d, %Y') }}{% endif %}
+      {% if course.end_date %} • <span class="font-semibold">End:</span> {{ course.end_date.strftime('%b %d, %Y') }}{% endif %}
+    </div>
+    <p class="text-slate-700 mt-3">{{ course.description }}</p>
+
+    <div class="space-y-4 mt-6">
+      {% for w in weeks %}
+        <div class="border rounded p-4">
+          <h3 class="font-semibold text-slate-800 mb-2">Week {{ w.number }} — {{ w.title }}</h3>
+          <ul class="list-disc pl-5">
+            {% for l in w.lessons %}
+              <li>
+                {% if l.type == 'content' %}
+                  <a class="text-brand underline" href="/lessons/{{ l.id }}">[Lesson]</a> {{ l.title }}
+                {% elif l.type == 'assignment' %}
+                  <a class="text-brand underline" href="/assignments/{{ l.id }}">[Assignment]</a> {{ l.title }}
+                  {% if l.due_at %}<span class="text-sm text-slate-500">(due {{ l.due_at }})</span>{% endif %}
+                {% elif l.type == 'quiz' %}
+                  <a class="text-brand underline" href="/quizzes/{{ l.id }}">[Quiz]</a> {{ l.title }}
+                  {% if l.due_at %}<span class="text-sm text-slate-500">(due {{ l.due_at }})</span>{% endif %}
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <aside>
+    {% if not is_enrolled %}
+      <form method="post" action="/courses/{{ course.id }}/enroll" onsubmit="enroll(event)" class="mb-4">
+        <button class="bg-brand text-white px-4 py-2 rounded hover:bg-brand-dark w-full">Enroll</button>
+      </form>
+      <script>
+        async function enroll(e){ e.preventDefault(); await fetch(e.target.action, {method:'POST'}); location.reload(); }
+      </script>
+    {% endif %}
+    <div class="border rounded p-4">
+      <h4 class="font-semibold mb-2">Tags</h4>
+      <div class="text-sm text-slate-600">{{ course.tags or '—' }}</div>
+    </div>
+  </aside>
+</div>
+{% endblock %}

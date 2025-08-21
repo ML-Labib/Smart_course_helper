@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="text-2xl font-bold text-brand mb-4">GPA Calculator</h2>
+<div id="rows" class="space-y-2"></div>
+<div class="flex gap-2 mt-2">
+  <button onclick="addRow()" class="bg-brand text-white px-4 py-2 rounded hover:bg-brand-dark">Add Course</button>
+  <button onclick="clearRows()" class="border px-4 py-2 rounded">Clear</button>
+</div>
+<div class="mt-4">GPA: <span id="gpa" class="font-bold">0.00</span></div>
+<script>
+function addRow(){
+  const div = document.createElement('div');
+  div.className='row flex flex-wrap gap-2';
+  div.innerHTML = `
+    <input class="border px-2 py-1 w-28" placeholder="Credits" type="number" step="0.5" oninput="calc()">
+    <input class="border px-2 py-1 w-28" placeholder="Grade (0-4)" type="number" step="0.01" oninput="calc()">
+    <button type="button" class="px-2 py-1 border rounded text-sm" onclick="this.parentElement.remove(); calc()">Remove</button>
+  `;
+  document.getElementById('rows').appendChild(div);
+}
+function clearRows(){
+  document.getElementById('rows').innerHTML='';
+  addRow(); calc();
+}
+function calc(){
+  let sum=0, cred=0;
+  document.querySelectorAll('.row').forEach(r=>{
+    const c=parseFloat(r.children[0].value)||0;
+    const g=parseFloat(r.children[1].value)||0;
+    sum+=c*g; cred+=c;
+  });
+  document.getElementById('gpa').innerText=(cred? (sum/cred).toFixed(2):"0.00");
+}
+addRow();
+</script>
+{% endblock %}

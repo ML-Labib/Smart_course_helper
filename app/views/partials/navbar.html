@@ -1,0 +1,18 @@
+<nav class="bg-brand text-white">
+  <div class="max-w-6xl mx-auto px-4 flex items-center justify-between h-14">
+    <a href="/" class="font-semibold">Smart Course Helper</a>
+    <div class="space-x-4">
+      <a href="/courses" class="hover:text-slate-100">Courses</a>
+      <a href="/calendar" class="hover:text-slate-100">Calendar</a>
+      <a href="/study-plan" class="hover:text-slate-100">Study Plan</a>
+      <a href="/tools/gpa" class="hover:text-slate-100">GPA Calc</a>
+      {% if request.session.get('uid') %}
+        <a href="/dashboard" class="hover:text-slate-100">Dashboard</a>
+        {% if request.session.get('role') == 'admin' %}<a href="/admin" class="hover:text-slate-100">Admin</a>{% endif %}
+        <form action="/auth/logout" method="post" class="inline"><button class="bg-white text-brand rounded px-3 py-1 hover:bg-slate-100">Logout</button></form>
+      {% else %}
+        <a href="/auth/login" class="hover:text-slate-100">Login</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>

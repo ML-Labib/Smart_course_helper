@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="text-2xl font-bold text-brand mb-4">My Study Plan</h2>
+
+<form method="post" action="/study-plan/generate" class="flex items-center gap-2 mb-4">
+  <label class="flex items-center gap-2">
+    Hours/week
+    <input type="number" name="hours_per_week" min="1" max="50"
+           value="{{ plan and plan.target_hours_per_week or 5 }}"
+           class="border rounded px-3 py-2 w-28">
+  </label>
+  <button class="bg-brand text-white px-4 py-2 rounded hover:bg-brand-dark">Generate/Update Plan</button>
+</form>
+
+{% if plan and plan.items %}
+  <table class="min-w-full border rounded">
+    <thead class="bg-slate-50">
+      <tr>
+        <th class="text-left p-2">When</th>
+        <th class="text-left p-2">Lesson</th>
+        <th class="text-left p-2">Duration</th>
+        <th class="text-left p-2">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for it in plan.items|sort(attribute='scheduled_at') %}
+      <tr class="border-t">
+        <td class="p-2">{{ it.scheduled_at }}</td>
+        <td class="p-2">Lesson {{ it.lesson_id }}</td>
+        <td class="p-2">{{ it.duration_minutes }}m</td>
+        <td class="p-2">{{ "Done" if it.status_done else "Planned" }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <a href="/calendar" class="text-brand underline mt-3 inline-block">See on Calendar</a>
+{% else %}
+  <div class="p-3 border rounded bg-slate-50">No plan yet. Set hours/week and generate.</div>
+{% endif %}
+{% endblock %}
